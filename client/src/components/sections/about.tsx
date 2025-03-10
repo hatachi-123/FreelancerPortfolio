@@ -21,12 +21,11 @@ export default function About() {
               <h3 className="text-xl font-semibold text-white mb-4">
                 Habuchi Keita
               </h3>
-              <p className="text-white/80 leading-relaxed">
-                金融系システムの保守運用、新規開発を10年間経験。
-                現在はフリーランスとして、生成AIを活用したアプリケーション開発に
-                携わっています。システムアーキテクチャから最新のAI技術まで、
-                幅広い知識と経験を活かしたソリューションを提供いたします。
-              </p>
+              <ul className="text-white/80 space-y-2 list-disc list-inside">
+                <li>金融系システムの保守運用、新規開発を10年間経験</li>
+                <li>現在はフリーランスとして、生成AIを活用したアプリケーション開発に携わる</li>
+                <li>システムアーキテクチャから最新のAI技術まで、幅広い知識と経験を活かしたソリューションを提供</li>
+              </ul>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

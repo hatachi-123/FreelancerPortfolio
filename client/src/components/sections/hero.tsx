@@ -18,10 +18,6 @@ export default function Hero() {
           <br />
           Solutions
         </h1>
-        <p className="text-lg md:text-xl text-white/80 max-w-2xl">
-          AIの革新的な技術と10年以上のシステム開発経験を活かし、
-          アイデアをインテリジェントなアプリケーションへと変換します。
-        </p>
       </motion.div>
 
       <motion.div
