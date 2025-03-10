@@ -28,16 +28,16 @@ export default function Contact() {
     },
     onSuccess: () => {
       toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
+        title: "メッセージを送信しました",
+        description: "お問い合わせありがとうございます。近日中にご連絡させていただきます。",
       });
       form.reset();
     },
     onError: () => {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to send message. Please try again.",
+        title: "エラー",
+        description: "メッセージの送信に失敗しました。時間をおいて再度お試しください。",
       });
     },
   });
@@ -66,12 +66,12 @@ export default function Contact() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Name</FormLabel>
+                      <FormLabel className="text-white">お名前</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           className="bg-green-900/20 border-green-800 text-white"
-                          placeholder="Your name"
+                          placeholder="山田 太郎"
                         />
                       </FormControl>
                       <FormMessage />
@@ -84,7 +84,7 @@ export default function Contact() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Email</FormLabel>
+                      <FormLabel className="text-white">メールアドレス</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -103,12 +103,12 @@ export default function Contact() {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Message</FormLabel>
+                      <FormLabel className="text-white">メッセージ</FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}
                           className="bg-green-900/20 border-green-800 text-white"
-                          placeholder="Your message"
+                          placeholder="お問い合わせ内容をご記入ください"
                           rows={6}
                         />
                       </FormControl>
@@ -122,7 +122,7 @@ export default function Contact() {
                   className="w-full"
                   disabled={mutation.isPending}
                 >
-                  {mutation.isPending ? "Sending..." : "Send Message"}
+                  {mutation.isPending ? "送信中..." : "送信する"}
                 </Button>
               </form>
             </Form>

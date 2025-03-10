@@ -23,8 +23,8 @@ export default function Work() {
                 Portfolio Under Construction
               </h3>
               <p className="text-white/60 text-center max-w-md">
-                I'm currently working on showcasing my latest AI-driven projects.
-                Check back soon to see my work!
+                最新のAIを活用したプロジェクト事例を準備中です。
+                もうしばらくお待ちください。
               </p>
             </CardContent>
           </Card>

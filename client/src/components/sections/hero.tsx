@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-black to-black" />
-      
+
       <motion.div
         className="container mx-auto px-4 relative z-10"
         initial={{ opacity: 0, y: 20 }}
@@ -19,8 +19,8 @@ export default function Hero() {
           Solutions
         </h1>
         <p className="text-lg md:text-xl text-white/80 max-w-2xl">
-          Transforming ideas into intelligent applications through AI innovation
-          and decade-long system development expertise.
+          AIの革新的な技術と10年以上のシステム開発経験を活かし、
+          アイデアをインテリジェントなアプリケーションへと変換します。
         </p>
       </motion.div>
 
