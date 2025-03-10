@@ -24,9 +24,7 @@ export default function Header() {
     >
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/">
-            <a className="text-white text-2xl font-bold">HK</a>
-          </Link>
+          <span className="text-white text-2xl font-bold">HK</span>
           <div className="hidden md:flex space-x-8">
             <a href="#about" className="text-white hover:text-green-400 transition-colors">
               About
