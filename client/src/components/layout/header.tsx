@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
 import { motion } from "framer-motion";
 
 export default function Header() {
@@ -24,15 +23,15 @@ export default function Header() {
     >
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <span className="text-white text-2xl font-bold">HK</span>
+          <span className="text-white text-2xl font-bold"></span>
           <div className="hidden md:flex space-x-8">
-            <a href="#about" className="text-white hover:text-green-400 transition-colors">
+            <a href="#about" className="text-white hover:text-green-400 transition-colors text-2xl">
               About
             </a>
-            <a href="#work" className="text-white hover:text-green-400 transition-colors">
+            <a href="#work" className="text-white hover:text-green-400 transition-colors text-2xl">
               Work
             </a>
-            <a href="#contact" className="text-white hover:text-green-400 transition-colors">
+            <a href="#contact" className="text-white hover:text-green-400 transition-colors text-2xl">
               Contact
             </a>
           </div>

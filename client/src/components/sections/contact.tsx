@@ -9,38 +9,73 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import ReCAPTCHA from "react-google-recaptcha";
+import { useState } from "react";
+
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
 export default function Contact() {
   const { toast } = useToast();
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  
   const form = useForm<InsertContact>({
     resolver: zodResolver(insertContactSchema),
     defaultValues: {
       name: "",
       email: "",
       message: "",
+      honeypot: "",
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (data: InsertContact) => {
-      const res = await apiRequest("POST", "/api/contact", data);
-      return res.json();
-    },
-    onSuccess: () => {
+  const handleSubmit = async (data: InsertContact) => {
+    if (!captchaToken) {
+      toast({
+        variant: "destructive",
+        title: "エラー",
+        description: "reCAPTCHAを完了してください。",
+      });
+      return;
+    }
+
+    if (data.honeypot) {
+      return;
+    }
+
+    if (!isConfirming) {
+      setIsConfirming(true);
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("message", data.message);
+      formData.append("g-recaptcha-response", captchaToken);
+      formData.append("_captcha", "true");
+
+      await fetch("https://formsubmit.co/hatachi.keibu@gmail.com", {
+        method: "POST",
+        body: formData,
+      });
+
       toast({
         title: "メッセージを送信しました",
         description: "お問い合わせありがとうございます。近日中にご連絡させていただきます。",
       });
       form.reset();
-    },
-    onError: () => {
+      setIsConfirming(false);
+      setCaptchaToken(null);
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "エラー",
         description: "メッセージの送信に失敗しました。時間をおいて再度お試しください。",
       });
-    },
-  });
+    }
+  };
 
   return (
     <section id="contact" className="py-20 bg-black/50">
@@ -57,10 +92,14 @@ export default function Contact() {
 
           <div className="max-w-2xl mx-auto">
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
-                className="space-y-6"
-              >
+              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+                <input
+                  type="text"
+                  id="_honey"
+                  style={{ display: "none" }}
+                  {...form.register("honeypot")}
+                />
+
                 <FormField
                   control={form.control}
                   name="name"
@@ -117,13 +156,41 @@ export default function Contact() {
                   )}
                 />
 
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={mutation.isPending}
-                >
-                  {mutation.isPending ? "送信中..." : "送信する"}
-                </Button>
+                <div className="flex justify-center">
+                  <ReCAPTCHA
+                    sitekey={RECAPTCHA_SITE_KEY || ''}
+                    onChange={(token: string | null) => setCaptchaToken(token)}
+                    hl="ja"
+                  />
+                </div>
+
+                {isConfirming ? (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-green-900/20 rounded-lg">
+                      <h3 className="text-white font-bold mb-2">確認画面</h3>
+                      <p className="text-white">お名前: {form.getValues("name")}</p>
+                      <p className="text-white">メール: {form.getValues("email")}</p>
+                      <p className="text-white">メッセージ: {form.getValues("message")}</p>
+                    </div>
+                    <div className="flex gap-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => setIsConfirming(false)}
+                      >
+                        修正する
+                      </Button>
+                      <Button type="submit" className="w-full">
+                        送信する
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button type="submit" className="w-full">
+                    確認画面へ
+                  </Button>
+                )}
               </form>
             </Form>
           </div>

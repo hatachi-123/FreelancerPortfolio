@@ -13,9 +13,8 @@ export default function Work() {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">
-            Work
+            Works
           </h2>
-
           <Card className="bg-green-900/20 border-green-800">
             <CardContent className="p-12 flex flex-col items-center justify-center">
               <Construction className="h-16 w-16 text-green-400 mb-4" />

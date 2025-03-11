@@ -9,13 +9,11 @@ export const contacts = pgTable("contacts", {
   message: text("message").notNull(),
 });
 
-export const insertContactSchema = createInsertSchema(contacts).pick({
-  name: true,
-  email: true,
-  message: true,
-}).extend({
-  email: z.string().email("Please enter a valid email address"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+export const insertContactSchema = z.object({
+  name: z.string().min(1, "お名前を入力してください"),
+  email: z.string().email("有効なメールアドレスを入力してください"),
+  message: z.string().min(1, "メッセージを入力してください"),
+  honeypot: z.string().optional(),
 });
 
 export type InsertContact = z.infer<typeof insertContactSchema>;
