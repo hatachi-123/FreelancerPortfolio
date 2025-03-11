@@ -12,7 +12,7 @@ import { apiRequest } from "@/lib/queryClient";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useState } from "react";
 
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 
 export default function Contact() {
   const { toast } = useToast();
