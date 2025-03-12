@@ -3,6 +3,7 @@ import { FaGithub, FaTwitter, FaYoutube, FaLinkedin, FaDiscord, FaInstagram, FaT
 // import { SiQiita, SiZenn, SiNote, SiWantedly } from 'react-icons/si';
 import { SiQiita, SiZenn, SiWantedly } from 'react-icons/si';
 import { TbNotebook } from 'react-icons/tb';
+import Arrow from "../ui/0-Arrow";
 
 export default function Hero() {
   return (
@@ -123,30 +124,8 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <a
-          href="#about"
-          className="text-white/60 hover:text-white transition-colors"
-        >
-          <motion.div
-            animate={{
-              y: [0, 10, 0],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            ↓
-          </motion.div>
-        </a>
-      </motion.div>
+      <Arrow href="#about" />
+
     </section>
   );
 }

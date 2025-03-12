@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Brain, Code, Database } from "lucide-react";
+import Arrow from "../ui/0-Arrow";
 
 export default function About() {
   return (
-    <section id="about" className="py-20 bg-black/50">
+    <section id="about" className="py-20 bg-black/50 relative overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -59,6 +60,7 @@ export default function About() {
           </div>
         </motion.div>
       </div>
+      <Arrow href="#work" />
     </section>
   );
 }

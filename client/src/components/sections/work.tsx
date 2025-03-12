@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Construction } from "lucide-react";
+import Arrow from "../ui/0-Arrow";
 
 export default function Work() {
   return (
-    <section id="work" className="py-20">
+    <section id="work" className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -29,6 +30,8 @@ export default function Work() {
           </Card>
         </motion.div>
       </div>
+      <Arrow href="#contact" />
+
     </section>
   );
 }
