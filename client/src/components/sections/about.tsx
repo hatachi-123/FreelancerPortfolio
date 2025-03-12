@@ -24,6 +24,7 @@ export default function About() {
                 <p>３０名超のチームの現場推進リーダとして活躍</p>
                 <p>現在は個人で生成AIを活用した爆速開発に全量投球</p>
                 <p>testtesttesttesttesttesttesttest</p>
+                <p>testt2222222222222sttesttesttest</p>                
               </ul>
             </div>
 
