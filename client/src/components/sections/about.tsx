@@ -25,6 +25,7 @@ export default function About() {
                 <p>現在は個人で生成AIを活用した爆速開発に全量投球</p>
                 <p>testtesttesttesttesttesttesttest</p>                
                 <p>Branchest </p>     
+                <p>Branchest2回目 </p>     
               </ul>
             </div>
 
