@@ -1,23 +1,19 @@
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { insertContactSchema, type InsertContact } from "@shared/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
-import ReCAPTCHA from "react-google-recaptcha";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
-
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 
 export default function Contact() {
   const { toast } = useToast();
   const [isConfirming, setIsConfirming] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<InsertContact>({
     resolver: zodResolver(insertContactSchema),
@@ -30,50 +26,59 @@ export default function Contact() {
   });
 
   const handleSubmit = async (data: InsertContact) => {
-    if (!captchaToken) {
-      toast({
-        variant: "destructive",
-        title: "エラー",
-        description: "reCAPTCHAを完了してください。",
-      });
-      return;
-    }
-
+    // ハニーポット対策 - スパムボットが入力した場合は成功を装って処理終了
     if (data.honeypot) {
-      return;
-    }
-
-    if (!isConfirming) {
-      setIsConfirming(true);
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      formData.append("message", data.message);
-      formData.append("g-recaptcha-response", captchaToken);
-      formData.append("_captcha", "true");
-
-      await fetch("https://formsubmit.co/hatachi.keibu@gmail.com", {
-        method: "POST",
-        body: formData,
-      });
-
       toast({
         title: "メッセージを送信しました",
         description: "お問い合わせありがとうございます。近日中にご連絡させていただきます。",
       });
       form.reset();
       setIsConfirming(false);
-      setCaptchaToken(null);
+      return;
+    }
+
+    // 確認画面表示
+    if (!isConfirming) {
+      setIsConfirming(true);
+      return;
+    }
+
+    // 送信処理
+    try {
+      setIsSubmitting(true);
+
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("message", data.message);
+      formData.append("_captcha", "true");
+
+      const response = await fetch("https://formsubmit.co/hatachi.keibu@gmail.com", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`送信エラー: ${response.status}`);
+      }
+
+      toast({
+        title: "メッセージを送信しました",
+        description: "お問い合わせありがとうございます。近日中にご連絡させていただきます。",
+      });
+
+      // フォームリセット
+      form.reset();
+      setIsConfirming(false);
     } catch (error) {
+      console.error("送信エラー:", error);
       toast({
         variant: "destructive",
         title: "エラー",
         description: "メッセージの送信に失敗しました。時間をおいて再度お試しください。",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -93,10 +98,13 @@ export default function Contact() {
           <div className="max-w-2xl mx-auto">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+                {/* ハニーポットフィールド - スパムボット対策 */}
                 <input
                   type="text"
                   id="_honey"
-                  style={{ display: "none" }}
+                  aria-hidden="true"
+                  tabIndex={-1}
+                  style={{ display: "none", position: "absolute", left: "-9999px" }}
                   {...form.register("honeypot")}
                 />
 
@@ -111,6 +119,8 @@ export default function Contact() {
                           {...field}
                           className="bg-green-900/20 border-green-800 text-white"
                           placeholder="山田 太郎"
+                          disabled={isSubmitting}
+                          aria-required="true"
                         />
                       </FormControl>
                       <FormMessage />
@@ -130,6 +140,8 @@ export default function Contact() {
                           type="email"
                           className="bg-green-900/20 border-green-800 text-white"
                           placeholder="your@email.com"
+                          disabled={isSubmitting}
+                          aria-required="true"
                         />
                       </FormControl>
                       <FormMessage />
@@ -149,20 +161,14 @@ export default function Contact() {
                           className="bg-green-900/20 border-green-800 text-white"
                           placeholder="お問い合わせ内容をご記入ください"
                           rows={6}
+                          disabled={isSubmitting}
+                          aria-required="true"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <div className="flex justify-center">
-                  <ReCAPTCHA
-                    sitekey={RECAPTCHA_SITE_KEY || ''}
-                    onChange={(token: string | null) => setCaptchaToken(token)}
-                    hl="ja"
-                  />
-                </div>
 
                 {isConfirming ? (
                   <div className="space-y-4">
@@ -178,16 +184,30 @@ export default function Contact() {
                         variant="outline"
                         className="w-full"
                         onClick={() => setIsConfirming(false)}
+                        disabled={isSubmitting}
                       >
                         修正する
                       </Button>
-                      <Button type="submit" className="w-full">
-                        送信する
+                      <Button
+                        type="submit"
+                        className="w-full"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            送信中...
+                          </>
+                        ) : "送信する"}
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <Button type="submit" className="w-full">
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
                     確認画面へ
                   </Button>
                 )}
@@ -196,7 +216,6 @@ export default function Contact() {
           </div>
         </motion.div>
       </div>
-
     </section>
   );
 }
