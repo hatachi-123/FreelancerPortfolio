@@ -1,11 +1,26 @@
 import { motion } from "framer-motion";
 import { FaGithub, FaTwitter, FaYoutube, FaLinkedin, FaDiscord, FaInstagram, FaTiktok } from 'react-icons/fa';
-// import { SiQiita, SiZenn, SiNote, SiWantedly } from 'react-icons/si';
 import { SiQiita, SiZenn, SiWantedly } from 'react-icons/si';
 import { TbNotebook } from 'react-icons/tb';
 import Arrow from "../ui/0-Arrow";
+import { useEffect, useState } from "react";
 
 export default function Hero() {
+
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    // クライアントサイドでのみwindow参照を行う
+    setWindowWidth(window.innerWidth);
+    
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-black to-black" />
@@ -19,7 +34,7 @@ export default function Hero() {
         <div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6"
             style={{
-              marginLeft: window.innerWidth < 768 ? '5px' : '0px'
+              marginLeft: windowWidth  < 768 ? '5px' : '0px'
             }}>
             AI-Driven
             <br />
@@ -40,7 +55,7 @@ export default function Hero() {
                 className="w-40 h-48 md:w-55 md:h-64 object-cover rounded-full shadow-xl mx-auto md:ml-5"
                 style={{
                   borderRadius: '40% / 30%',
-                  marginTop: window.innerWidth < 768 ? '0px' : '50px'
+                  marginTop: windowWidth  < 768 ? '0px' : '50px'
                 }}
               />
               <div className="text-white text-xl md:text-3xl text-center md:text-left mt-4 md:mt-0 md:ml-[70px]">
@@ -60,7 +75,7 @@ export default function Hero() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          style={{ marginLeft: window.innerWidth < 768 ? '0px' : '20px' }}
+          style={{ marginLeft: windowWidth  < 768 ? '0px' : '20px' }}
         >
           <div className="bg-base-100/80 backdrop-blur rounded-xl shadow-lg overflow-hidden">
             <ul className="divide-y divide-base-300">
